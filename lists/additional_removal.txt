@@ -90,6 +90,8 @@ zeus
 hera
 pluto
 matthew
+phillippus
+philippus
 cleopatra
 thaddeus
 oscar
@@ -210,3 +212,5 @@ surinam
 yeddo
 barne
 bedell
+edward
+philippine
