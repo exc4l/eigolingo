@@ -24,6 +24,8 @@ def pattern_replacement(text, pattern, replacements):
 filename = argv[1]
 if len(argv) > 2:
     dictsize = int(argv[2])
+else:
+    dictsize = 70
 
 with open(filename, "r", encoding="utf-8") as f:
     text = f.read().lower()
@@ -38,7 +40,7 @@ text = re.sub(r"(\w)('s|’s|’|')", r"\1", text)
 text = text.translate(punctu)
 text = re.sub(r"\s+", " ", text)
 
-with open("dict95.txt", "r", encoding="utf-8") as f:
+with open(f"dict{dictsize}.txt", "r", encoding="utf-8") as f:
     infdict = read_dict(f.read().splitlines())
 
 
@@ -50,8 +52,6 @@ for w in textsp:
         continue
     if not w:
         continue
-    #     if w == "israe":
-    #         print(text.split().index(w))
     if w in infdict:
         clist95.append(infdict[w])
     else:
