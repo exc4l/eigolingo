@@ -3,59 +3,59 @@ from collections import Counter
 from sys import argv
 
 
-def read_dict(textlines):
+def _create_dict(textlines):
     rdict = dict()
     for line in textlines:
         key, value = line.split(":")
         rdict[key] = value
     return rdict
 
+def read_dict(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        return _create_dict(f.read().splitlines())
 
-def pattern_create(replacements):
-    rep_sorted = sorted(replacements, key=len, reverse=True)
-    rep_escaped = list(map(re.escape, rep_sorted))
-    return re.compile("|".join(rep_escaped))
+def clean_text(text, contdict=None):
+    remstr = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~’–—„“”…‘’"
+    punctu = str.maketrans(remstr, " " * len(remstr))
+    if contdict:
+        for key in sorted(list(contdict.keys()), key=len, reverse=True):
+            text = text.replace(key, contdict[key])
+    text = re.sub(r"(\w)('s|’s|’|')", r"\1", out)
+    text = text.translate(punctu)
+    text = re.sub(r"\s+", " ", text)
+    return text
 
-
-def pattern_replacement(text, pattern, replacements):
-    return pattern.sub(lambda match: replacements[match.group(0).strip()], text)
-
-
-filename = argv[1]
-if len(argv) > 2:
-    dictsize = int(argv[2])
-else:
-    dictsize = 70
-
-with open(filename, "r", encoding="utf-8") as f:
-    text = f.read().lower()
-with open("contraction_dict.txt", "r", encoding="utf-8") as f:
-    contdict = read_dict(f.read().splitlines())
-contpat = pattern_create(contdict)
-
-remstr = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~’–—„“”…‘’"
-punctu = str.maketrans(remstr, " " * len(remstr))
-text = pattern_replacement(text, contpat, contdict)
-text = re.sub(r"(\w)('s|’s|’|')", r"\1", text)
-text = text.translate(punctu)
-text = re.sub(r"\s+", " ", text)
-
-with open(f"dict{dictsize}.txt", "r", encoding="utf-8") as f:
-    infdict = read_dict(f.read().splitlines())
+def read_and_clean(filename, contdict=None):
+    with open(filename, "r", encoding="utf-8") as f:
+        text = f.read().lower()
+    return clean_text(text, contdict=contdict)
 
 
-clist95 = list()
-notinwlist = list()
-textsp = text.split()
-for w in textsp:
-    if any(char.isdigit() for char in w):
-        continue
-    if not w:
-        continue
-    if w in infdict:
-        clist95.append(infdict[w])
+if __name__ == '__main__':
+    if len(argv) > 1:
+        filename = argv[1]
     else:
-        notinwlist.append(w)
-wc95 = Counter(clist95)
-print(len(wc95))
-print(len(set(notinwlist)))
+        filename = "1984.txt"
+        dictsize = 70
+    if len(argv) > 2:
+        dictsize = int(argv[2])
+    else:
+        dictsize = 70
+    wdict = read_dict(f"dict{dictsize}.txt")
+    contdict = read_dict("contraction_dict.txt")
+
+    text = read_and_clean(filename, contdict)
+    clist95 = list()
+    notinwlist = list()
+    for w in text.split():
+        if not w.isalpha():
+            print(w)
+            continue
+        if w in wdict:
+            clist95.append(wdict[w])
+        else:
+            notinwlist.append(w)
+    wc95 = Counter(clist95)
+    print(len(wc95))
+    print(len(set(notinwlist)))
+    print(sum(wc95.values()))
