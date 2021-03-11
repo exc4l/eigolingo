@@ -20,7 +20,7 @@ def clean_text(text, contdict=None):
     if contdict:
         for key in sorted(list(contdict.keys()), key=len, reverse=True):
             text = text.replace(key, contdict[key])
-    text = re.sub(r"(\w)('s|’s|’|')", r"\1", out)
+    text = re.sub(r"(\w)('s|’s|’|')", r"\1", text)
     text = text.translate(punctu)
     text = re.sub(r"\s+", " ", text)
     return text
@@ -49,7 +49,6 @@ if __name__ == '__main__':
     notinwlist = list()
     for w in text.split():
         if not w.isalpha():
-            print(w)
             continue
         if w in wdict:
             clist95.append(wdict[w])
