@@ -8,6 +8,7 @@ kevlar
 noob
 nutball
 ordinate
+ordinates
 noser
 nosers
 semiauto
