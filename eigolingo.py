@@ -1,6 +1,6 @@
 import re
 from collections import Counter
-from sys import argv
+from sys import argv, path
 
 
 def _create_dict(textlines):
@@ -44,8 +44,9 @@ if __name__ == "__main__":
         dictsize = int(argv[2])
     else:
         dictsize = 70
-    wdict = read_dict(f"dict{dictsize}.txt")
-    contdict = read_dict("contraction_dict.txt")
+    wdir = path[0]
+    wdict = read_dict(f"{wdir}/dict{dictsize}.txt")
+    contdict = read_dict(f"{wdir}/contraction_dict.txt")
 
     text = read_and_clean(filename, contdict)
     clist95 = list()
@@ -66,4 +67,4 @@ if __name__ == "__main__":
         "tokens counted: ".ljust(20),
         f"{100*sum(wc95.values())/(text.count(' ')-number_counter):.2f}%",
     )
-    print("total tokens: ".ljust(20), sum(wc95.values()))
+    print("total tokens: ".ljust(20), text.count(" ") - number_counter)
