@@ -10,9 +10,11 @@ def _create_dict(textlines):
         rdict[key] = value
     return rdict
 
+
 def read_dict(filename):
     with open(filename, "r", encoding="utf-8") as f:
         return _create_dict(f.read().splitlines())
+
 
 def clean_text(text, contdict=None):
     remstr = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~’–—„“”…‘’"
@@ -25,13 +27,14 @@ def clean_text(text, contdict=None):
     text = re.sub(r"\s+", " ", text)
     return text
 
+
 def read_and_clean(filename, contdict=None):
     with open(filename, "r", encoding="utf-8") as f:
         text = f.read().lower()
     return clean_text(text, contdict=contdict)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if len(argv) > 1:
         filename = argv[1]
     else:
@@ -58,3 +61,4 @@ if __name__ == '__main__':
     print(len(wc95))
     print(len(set(notinwlist)))
     print(sum(wc95.values()))
+    print(f"{100*sum(wc95.values())/text.count(' '):.2f}%")
