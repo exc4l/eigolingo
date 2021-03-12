@@ -17,7 +17,7 @@ def read_dict(filename):
 
 
 def clean_text(text, contdict=None):
-    remstr = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~’–—„“”…‘’"
+    remstr = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~’–—„“”…‘’\x93\x94‡†‴»∥§\x92\x91·"
     punctu = str.maketrans(remstr, " " * len(remstr))
     if contdict:
         for key in sorted(list(contdict.keys()), key=len, reverse=True):
@@ -50,15 +50,20 @@ if __name__ == "__main__":
     text = read_and_clean(filename, contdict)
     clist95 = list()
     notinwlist = list()
+    number_counter = 0
     for w in text.split():
         if not w.isalpha():
+            number_counter += 1
             continue
         if w in wdict:
             clist95.append(wdict[w])
         else:
             notinwlist.append(w)
     wc95 = Counter(clist95)
-    print(len(wc95))
-    print(len(set(notinwlist)))
-    print(sum(wc95.values()))
-    print(f"{100*sum(wc95.values())/text.count(' '):.2f}%")
+    unkcount = Counter(notinwlist)
+    print("unique tokens: ".ljust(20), len(wc95))
+    print(
+        "tokens counted: ".ljust(20),
+        f"{100*sum(wc95.values())/(text.count(' ')-number_counter):.2f}%",
+    )
+    print("total tokens: ".ljust(20), sum(wc95.values()))
