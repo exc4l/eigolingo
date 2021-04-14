@@ -1,2 +1,15 @@
 overfulfil:overfulfill
 overfulfilled:overfulfill
+cookin:cook
+fuckin:fuck
+jokin:joke
+listenin:listen
+lookin:look
+makin:make
+mornin:morning
+nothin:nothing
+sayin:say
+screamin:scream
+talkin:talk
+tellin:tell
+walkin:walk
