@@ -89737,7 +89737,6 @@ tactuality:tactuality
 taddie:taddie
 taddies:taddy
 taddy:taddy
-tae:tae
 taedium:taedium
 taegu:taegu
 taeniacides:taeniacide
@@ -90878,7 +90877,6 @@ tellered:teller
 tellering:teller
 tellership:tellership
 tellerships:tellership
-tellin:tellin
 tellings:telling
 tellinoid:tellinoid
 tellins:tellin

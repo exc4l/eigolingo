@@ -62467,6 +62467,7 @@ cookhouse
 cookhouses
 cookie
 cookies
+cookin
 cooking
 cookout
 cookouts
@@ -116645,6 +116646,7 @@ fairytales
 fait
 faith
 faithed
+faither
 faithful
 faithfully
 faithfulness
@@ -124990,6 +124992,7 @@ fuckery
 fuckhead
 fuckheaded
 fuckheads
+fuckin
 fucking
 fuckings
 fuckload
@@ -163269,6 +163272,7 @@ jokey
 jokier
 jokiest
 jokily
+jokin
 joking
 jokingly
 joky
@@ -170425,6 +170429,7 @@ likens
 liker
 likers
 likes
+likesay
 likest
 liketh
 likewise
@@ -171376,6 +171381,7 @@ listened
 listener
 listeners
 listenership
+listenin
 listening
 listenon
 listens
@@ -172620,6 +172626,7 @@ looker
 lookers
 lookest
 looketh
+lookin
 looking
 lookingglass
 lookingglasses
@@ -175227,6 +175234,7 @@ makeup
 makeups
 makeweight
 makeweights
+makin
 making
 makings
 mako
@@ -191969,6 +191977,7 @@ morion
 morions
 moriperan
 morn
+mornin
 morning
 morningness
 mornings
@@ -198349,6 +198358,7 @@ nicardipine
 nicasterol
 niccolite
 niccolum
+nice
 nicely
 niceness
 nicenesses
@@ -202656,6 +202666,7 @@ noteworthinesses
 noteworthy
 notha
 nothiazine
+nothin
 nothing
 nothingness
 nothingnesses
@@ -259514,6 +259525,7 @@ say
 sayer
 sayers
 sayest
+sayin
 saying
 sayings
 sayonara
@@ -260886,6 +260898,7 @@ scream
 screamed
 screamer
 screamers
+screamin
 screaming
 screamingly
 screams
@@ -282065,6 +282078,7 @@ tadeonal
 tadpole
 tadpoles
 tads
+tae
 tael
 taels
 taenia
@@ -282296,6 +282310,7 @@ talkie
 talkier
 talkies
 talkiest
+talkin
 talking
 talks
 talky
@@ -283882,6 +283897,7 @@ tellest
 telleth
 tellies
 tellimagrandin
+tellin
 telling
 tellingly
 tellone
@@ -317099,6 +317115,7 @@ walkest
 walketh
 walkie
 walkies
+walkin
 walking
 walkingstick
 walkingsticks
