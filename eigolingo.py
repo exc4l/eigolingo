@@ -16,6 +16,19 @@ def read_dict(filename):
         return _create_dict(f.read().splitlines())
 
 
+def read_wdict(dictpath, dictsize):
+    if dictsize not in [70, 80, 95]:
+        raise ValueError("Specify an available dictsize [70, 80, 95]")
+    wdict = read_dict(f"{dictpath}/dict70.txt")
+    if dictsize == 70:
+        return wdict
+    wdict.update(read_dict(f"{dictpath}/dict80.txt"))
+    if dictsize == 80:
+        return wdict
+    wdict.update(read_dict(f"{dictpath}/dict95.txt"))
+    return wdict
+
+
 def clean_text(text, contdict=None):
     remstr = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~’–—„“”…‘’\x93\x94‡†‴»∥§\x92\x91·"
     punctu = str.maketrans(remstr, " " * len(remstr))
@@ -45,7 +58,7 @@ if __name__ == "__main__":
     else:
         dictsize = 70
     wdir = path[0]
-    wdict = read_dict(f"{wdir}/dict{dictsize}.txt")
+    wdict = read_wdict(wdir, dictsize)
     contdict = read_dict(f"{wdir}/contraction_dict.txt")
 
     text = read_and_clean(filename, contdict)
