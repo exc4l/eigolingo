@@ -62,19 +62,17 @@ if __name__ == "__main__":
     contdict = read_dict(f"{wdir}/contraction_dict.txt")
 
     text = read_and_clean(filename, contdict)
-    clist95 = list()
-    notinwlist = list()
+    wc95 = Counter()
+    unkcount = Counter()
     number_counter = 0
     for w in text.split():
         if not w.isalpha():
             number_counter += 1
             continue
         if w in wdict:
-            clist95.append(wdict[w])
+            wc95.update([wdict[w]])
         else:
-            notinwlist.append(w)
-    wc95 = Counter(clist95)
-    unkcount = Counter(notinwlist)
+            unkcount.update([w])
     print("unique tokens: ".ljust(20), len(wc95))
     print(
         "tokens counted: ".ljust(20),
