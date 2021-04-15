@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "eigolingo"
-version = "0.0.2"
+version = "0.0.3"
 description = "Determine the number of unique words in a given text/string"
 authors = ["exc4l <cps0537@gmail.com>"]
 readme = "README.md"
@@ -15,6 +15,9 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
+numpy = "^1.20.2"
+pandas = "^1.2.4"
+tqdm = "^4.60.0"
 
 [tool.poetry.dev-dependencies]
 
