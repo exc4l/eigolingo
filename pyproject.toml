@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "eigolingo"
-version = "0.0.3"
+version = "0.0.4"
 description = "Determine the number of unique words in a given text/string"
 authors = ["exc4l <cps0537@gmail.com>"]
 readme = "README.md"

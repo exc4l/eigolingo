@@ -1,4 +1,4 @@
-from importlib_metadata import version
+from importlib.metadata import version
 
 __version__ = version(__package__)
 
@@ -32,8 +32,21 @@ def _entropy(counter, base=2):
     arr = np.fromiter(counter.values(), float)
     tot = np.sum(arr)
     arr = arr / tot
-    arr = arr * np.log(arr) / np.log(base)
-    return -np.sum(arr)
+    return -np.sum(arr * np.log(arr) / np.log(base))
+
+
+def _crossentropy(counter, true_counter, base=2, eps=1e-15):
+    """true_counter is expected to contain propabilities - not counts"""
+    # inbetween = list(
+    #     (true_counter[k], counter.get(k, eps)) for k in true_counter.keys()
+    # )
+    inbetween = list(
+            (v, counter.get(k, eps)) for k, v in true_counter.items()
+    )
+    vals = np.array(inbetween)
+    p, q = np.hsplit(vals, 2)
+    tot = np.sum(q)
+    return -np.sum(p * np.log(q / tot) / np.log(base))
 
 
 def read_dict(filename):
@@ -53,6 +66,17 @@ def read_wdict(dictsize):
         return wdict
     wdict.update(read_dict(f"{dictpath}/dict95.txt"))
     return wdict
+
+
+def read_total_counter():
+    dictpath = _get_dictpath()
+    with open(f"{dictpath}/total_counter.txt", "r", encoding="utf-8") as f:
+        data = f.read().splitlines()
+    rdict = dict()
+    for line in data:
+        key, value = line.split(":")
+        rdict[key] = int(value)
+    return rdict
 
 
 def clean_text(text, contdict=None):
@@ -94,8 +118,13 @@ def main():
         dictsize = int(argv[2])
     else:
         dictsize = 70
+    if len(argv) > 3:
+        if "cross" in argv[3]:
+            CALC_CROSS = True
+    else:
+        CALC_CROSS = False
     wdict = read_wdict(dictsize)
-    contdict = read_dict(f"{wdir}/contraction_dict.txt")
+    contdict = read_dict(f"{_get_dictpath()}/contraction_dict.txt")
 
     text = read_and_clean(filename, contdict)
     wc95 = Counter()
@@ -115,6 +144,13 @@ def main():
         f"{100*sum(wc95.values())/(text.count(' ')-number_counter):.2f}%",
     )
     print("total tokens: ".ljust(20), text.count(" ") - number_counter)
+    print("entropy: ".ljust(20), _entropy(wc95))
+    if CALC_CROSS:
+        true_probs = Counter(read_total_counter())
+        temptotal = sum(true_probs.values())
+        for key in true_probs.keys():
+            true_probs[key] /= temptotal
+        print("cross-entropy: ".ljust(20), _crossentropy(wc95, true_probs))
 
 
 class Eigo:
@@ -124,14 +160,41 @@ class Eigo:
         self.df = pd.DataFrame()
         self.dictpath = _get_dictpath()
         self.contdict = read_dict(self.dictpath / "contraction_dict.txt")
+        self.cross95 = False
         self.w70 = read_wdict(70)
         self.w80 = self.w70.copy()
         self.w80.update(read_dict(self.dictpath / "dict80.txt"))
         self.w95 = self.w80.copy()
         self.w95.update(read_dict(self.dictpath / "dict95.txt"))
-        print(len(self.w95))
+        print("w95 dictsize: ",len(self.w95))
         self.total_counter = Counter()
-        print(len(self.total_counter))
+        self.total_uknown = Counter()
+        self.true_counts = Counter(read_total_counter())
+        self.true_probs = self.true_counts.copy()
+        temptotal = sum(self.true_counts.values())
+        for key in self.true_probs.keys():
+            self.true_probs[key] /= temptotal
+
+    def _get_add_data(self, wcount, totalcount, dictsize, crossentropy=False):
+        if crossentropy:
+            return {
+            f"UniqueTokens{dictsize}": len(wcount),
+            f"TokensCounted{dictsize}": 100 * sum(wcount.values()) / (totalcount),
+            f"Entropy{dictsize}": _entropy(wcount),
+            f"Cross-Entropy{dictsize}": _crossentropy(wcount, self.true_probs),
+            }
+        return {
+            f"UniqueTokens{dictsize}": len(wcount),
+            f"TokensCounted{dictsize}": 100 * sum(wcount.values()) / (totalcount),
+            f"Entropy{dictsize}": _entropy(wcount),
+            f"Counter{dictsize}": wcount,
+        }
+        
+
+    def clean_total_uknown(self):
+        for k in list(self.total_uknown.keys()):
+            if k in self.w95:
+                del self.total_uknown[k]
 
     def feed_text(self, name, text, cleaned=False):
         wdict = self.w70
@@ -148,41 +211,28 @@ class Eigo:
                 wcount.update([wdict[w]])
             else:
                 unkcount.update([w])
+        totalcount = text.count(" ") - number_counter
         add_data = [
             {
                 "Name": name,
-                "TotalTokens": text.count(" ") - number_counter,
-                "UniqueTokens70": len(wcount),
-                "TokensCounted70": 100
-                * sum(wcount.values())
-                / (text.count(" ") - number_counter),
-                "Entropy70": _entropy(wcount),
+                "TotalTokens": totalcount,
             }
         ]
+        add70 = self._get_add_data(wcount, totalcount, 70)
         for k, v in unkcount.items():
             if k in self.w80:
                 wcount[k] = v
-        add80 = {
-            "UniqueTokens80": len(wcount),
-            "TokensCounted80": 100
-            * sum(wcount.values())
-            / (text.count(" ") - number_counter),
-            "Entropy80": _entropy(wcount),
-        }
+        add80 = self._get_add_data(wcount, totalcount, 80)
         for k, v in unkcount.items():
             if k in self.w95:
                 wcount[k] = v
-        add95 = {
-            "UniqueTokens95": len(wcount),
-            "TokensCounted95": 100
-            * sum(wcount.values())
-            / (text.count(" ") - number_counter),
-            "Entropy95": _entropy(wcount),
-        }
+        add95 = self._get_add_data(wcount, totalcount, 95, crossentropy=self.cross95)
+        add_data[0].update(add70)
         add_data[0].update(add80)
         add_data[0].update(add95)
         self.df = self.df.append(add_data, ignore_index=True, sort=False)
         self.total_counter.update(wcount)
+        self.total_uknown.update(unkcount)
 
     def feed_filelist(self, filelist, threads=6):
         args = ((book, self.contdict) for book in filelist)
