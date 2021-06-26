@@ -1,5 +1,32 @@
 # eigolingo
 
+
+## Outdated
+
+The current README is outdated as I've made a pip package out of it. You can install eigolingo via:
+```python
+pip install eigolingo
+```
+
+It will also install as a script called "eigo" which can be called from everywhere.
+
+```python
+eigo file [dictsize] [crossentropy]
+eigo 1984.txt 95 cross
+eigo 1984.txt
+eigo 1984.txt 80
+```
+
+### DEMO
+```python
+λ eigo 1984.txt 95 cross
+unique tokens:       6216
+tokens counted:      98.85%
+total tokens:        104759
+entropy:             8.94482897130734
+cross-entropy:       17.38673214148449
+```
+
 Using eigolingo you can answer the question "How many unique words are in this book/text/novel?" in under a second.
 
 This repository contains the resources necessary to generate English wordlists (namely wordlist70, 80, and 95.txt) and inflection dictionaries (dict70, 80 adn 95.txt). To see how they are generated feel free to open the notebook in Google Colab and modify the process as you please.
